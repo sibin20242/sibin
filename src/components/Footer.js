@@ -1,8 +1,23 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Footer = () => {
+  const [showBackToTop, setShowBackToTop] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      setShowBackToTop(scrollTop > 300);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ 
+      top: 0, 
+      behavior: 'smooth' 
+    });
   };
 
   const socialLinks = [
@@ -27,9 +42,16 @@ const Footer = () => {
         ))}
       </div>
       <p>&copy; 2025 SIBIN K S. All rights reserved.</p>
-      <a href="#hero" className="back-to-top" onClick={scrollToTop}>
-        Back to Top &uarr;
-      </a>
+      
+      {/* Enhanced Back to Top Button */}
+      <button 
+        className={`back-to-top-btn ${showBackToTop ? 'show' : ''}`}
+        onClick={scrollToTop}
+        aria-label="Back to top"
+      >
+        <i className="fas fa-chevron-up"></i>
+        <span className="back-to-top-text">Top</span>
+      </button>
     </footer>
   );
 };
