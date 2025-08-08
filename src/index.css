@@ -7,6 +7,7 @@
   --text-muted: #cbd5e1;
   --shadow: 0 4px 24px rgba(0,0,0,0.15);
   --radius: 18px;
+  --header-offset: 90px; /* space below sticky header for anchors */
 }
 
 * {
@@ -20,11 +21,56 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Ensure sections, including #hero, don't hide under sticky navbar */
+section { scroll-margin-top: var(--header-offset); }
+#hero { scroll-margin-top: var(--header-offset); }
+
 body {
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  /* Modern multilayer background with soft glows */
+  background: 
+    radial-gradient(1200px 800px at 8% 12%, rgba(37, 99, 235, 0.14), transparent 45%),
+    radial-gradient(900px 700px at 90% 8%, rgba(245, 11, 11, 0.12), transparent 45%),
+    radial-gradient(1000px 800px at 18% 92%, rgba(99, 102, 241, 0.12), transparent 52%),
+    linear-gradient(180deg, #0b1220 0%, #0f172a 35%, #111827 100%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: auto, auto, auto, 100% 100%;
+  background-position: 0% 0%, 100% 0%, 0% 100%, 50% 50%;
   color: var(--text-main);
   line-height: 1.7;
   min-height: 100vh;
+  animation: gradientShift 22s ease-in-out infinite;
+}
+
+/* Subtle grid overlay for depth */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  background-size: 22px 22px;
+  opacity: 0.12;
+  z-index: 0;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 0%, 100% 0%, 0% 100%, 50% 50%;
+  }
+  50% {
+    background-position: 30% 20%, 70% 10%, 10% 80%, 50% 50%;
+  }
+  100% {
+    background-position: 0% 0%, 100% 0%, 0% 100%, 50% 50%;
+  }
+}
+
+/* Respect user motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  body {
+    animation: none;
+  }
 }
 
 /* Header Layout Adjustments */
@@ -220,17 +266,27 @@ nav a:hover::after {
 section {
   padding: 60px 20px;
   max-width: 1100px;
-  margin: 40px auto 0 auto;
+  margin: 40px auto 0 auto; /* centered */
+  display: block;
 }
 
+/* Solid cards (no transparency) */
 .card {
-  background: rgba(30, 41, 59, 0.8);
-  backdrop-filter: blur(10px);
+  background: var(--bg-card);
+  backdrop-filter: none;
   border-radius: var(--radius);
   padding: 38px 32px;
-  margin-top: 30px;
+  margin: 30px auto 0 auto; /* centered */
   box-shadow: var(--shadow);
-  border: 1px solid rgba(148, 163, 184, 0.1);
+  border: 1px solid rgba(148, 163, 184, 0.15);
+}
+
+/* Make hero and contact solid as well */
+.hero-section,
+.contact-form {
+  background: var(--bg-card);
+  backdrop-filter: none;
+  border: 1px solid rgba(148, 163, 184, 0.15);
 }
 
 .about-content {
@@ -553,7 +609,7 @@ footer {
 
 .back-to-top-btn:hover i {
   transform: translateY(-2px);
-  color: #fbbf24;
+  color: var(--accent);
 }
 
 .back-to-top-text {
@@ -564,7 +620,7 @@ footer {
 }
 
 .back-to-top-btn:hover .back-to-top-text {
-  color: #fbbf24;
+  color: var(--accent);
   transform: scale(1.1);
 }
 
@@ -630,10 +686,13 @@ footer {
   top: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0,0,0,0.8);
+  background: #000; /* fully opaque to hide page content */
   justify-content: center;
-  align-items: center;
-  backdrop-filter: blur(5px);
+  align-items: flex-start; /* start at top to allow natural scroll */
+  padding: 32px 16px; /* spacing so content isn't flush to edges */
+  overflow-y: auto; /* enable scrolling of overlay */
+  overscroll-behavior: contain; /* prevent background scroll */
+  backdrop-filter: none;
 }
 
 .certificate-modal.active {
@@ -653,18 +712,21 @@ footer {
 }
 
 .modal-content {
-  background: linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(51, 65, 85, 0.95));
+  background: #0f172a; /* solid dark */
   border-radius: 16px;
   padding: 24px 20px;
   max-width: 50vw;
   width: 50vw;
   text-align: center;
   position: relative;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.6);
   transform: translateY(0);
   animation: modalSlideIn 0.3s ease-out;
-  border: 1px solid rgba(148, 163, 184, 0.1);
-  backdrop-filter: blur(15px);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  backdrop-filter: none;
+  max-height: 90vh; /* constrain height */
+  overflow: auto; /* scroll inner content if needed */
+  -webkit-overflow-scrolling: touch; /* smooth on mobile */
 }
 
 @keyframes modalSlideIn {
@@ -707,48 +769,8 @@ footer {
 }
 
 /* Animated Hero Background */
-.hero-bg-animated {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  z-index: 1;
-  overflow: hidden;
-  pointer-events: none;
-}
-.circle {
-  position: absolute;
-  border-radius: 50%;
-  opacity: 0.35;
-  filter: blur(2px);
-  animation: float 8s ease-in-out infinite alternate;
-}
-.circle1 {
-  width: 320px; height: 320px;
-  background: linear-gradient(135deg, #00bcd4 60%, #ff9800 100%);
-  top: -80px; left: -100px;
-  animation-delay: 0s;
-}
-.circle2 {
-  width: 180px; height: 180px;
-  background: linear-gradient(135deg, #ff9800 60%, #00bcd4 100%);
-  bottom: 40px; right: 60px;
-  animation-delay: 2s;
-}
-.circle3 {
-  width: 120px; height: 120px;
-  background: linear-gradient(135deg, #00bcd4 60%, #fff 100%);
-  top: 120px; right: 120px;
-  animation-delay: 4s;
-}
-.circle4 {
-  width: 90px; height: 90px;
-  background: linear-gradient(135deg, #ff9800 60%, #fff 100%);
-  bottom: 120px; left: 80px;
-  animation-delay: 6s;
-}
-@keyframes float {
-  0% { transform: translateY(0) scale(1); }
-  100% { transform: translateY(-30px) scale(1.08); }
-}
+/* Removed animated hero background circles */
+/* .hero-bg-animated and .circle styles were deleted intentionally */
 
 /* Typewriter cursor */
 .typewriter-cursor {
@@ -764,15 +786,8 @@ footer {
   50% { opacity: 0; }
 }
 
-/* Glassmorphism for cards/sections */
-.card, .hero-section, .modal-content, .contact-form {
-  background: rgba(35, 39, 42, 0.65);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
-  backdrop-filter: blur(8px) saturate(120%);
-  -webkit-backdrop-filter: blur(8px) saturate(120%);
-  border-radius: var(--radius);
-  border: 1.5px solid rgba(255,255,255,0.08);
-}
+/* Glassmorphism for cards/sections (modal excluded now) */
+/* .card, .hero-section, .contact-form { ... } rule adjusted above to be solid */
 
 /* Section fade-in animation */
 .section-fade-in {
@@ -793,17 +808,17 @@ footer {
 
 /* Dark/Light mode */
 .theme-dark {
-  --primary: #2563eb;
-  --accent: #f59e0b;
-  --bg-dark: #0f172a;
-  --bg-card: #1e293b;
+  --primary: #2563eb; /* Blue */
+  --accent: #60a5fa;  /* Light Blue */
+  --bg-dark: #000000; /* Black */
+  --bg-card: #0b0f1a; /* Near-black cards */
   --text-main: #f8fafc;
   --text-muted: #cbd5e1;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  background: linear-gradient(135deg, #000000 0%, #0a1224 55%, #0b152d 100%);
 }
 .theme-light {
-  --primary: #1d4ed8;
-  --accent: #d97706;
+  --primary: #2563eb; /* Blue */
+  --accent: #38bdf8;  /* Light Cyan */
   --bg-dark: #f8fafc;
   --bg-card: #ffffff;
   --text-main: #1e293b;
@@ -842,7 +857,9 @@ footer {
 }
 
 .theme-light .name {
-  background: linear-gradient(135deg, var(--primary), var(--accent));
+  background: linear-gradient(135deg, var(--primary), var(--accent), var(--primary));
+  background-size: 300% 300%;
+  animation: shimmer 3s ease-in-out infinite;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -950,7 +967,7 @@ footer {
 
 /* Enhanced Name Animation */
 .name {
-  background: linear-gradient(135deg, var(--primary), var(--accent), #f59e0b, var(--primary));
+  background: linear-gradient(135deg, var(--primary), var(--accent), var(--primary));
   background-size: 300% 300%;
   animation: shimmer 3s ease-in-out infinite;
   -webkit-background-clip: text;
@@ -1974,34 +1991,44 @@ nav a:hover {
 /* Responsive Navigation */
 @media (max-width: 767.98px) {
   header {
-    padding: 12px 20px;
+    padding: 12px 16px;
     height: 60px;
   }
 
-  .brand h1 {
-    font-size: 1.5rem;
+  /* Remove side gaps: make sections full-width on mobile */
+  section {
+    max-width: 100%;
+    width: 100%;
+    margin: 20px 0 0 0;
+    padding: 40px 12px;
   }
 
-  .nav-photo {
-    width: 35px;
-    height: 35px;
+  /* Hero tighter padding on mobile for full-width feel */
+  .hero-section {
+    padding: 60px 12px;
   }
 
-  .hamburger-menu {
-    display: flex;
-  }
+  /* Show hamburger inside header; hide desktop nav */
+  .hamburger-menu { display: flex; }
+  nav { display: none; }
 
-  nav {
-    display: none;
-  }
-
+  /* Mobile nav becomes a full-width dropdown from the navbar */
   .mobile-nav {
     display: block;
+    position: fixed;
+    top: 60px; /* just below sticky header */
+    left: 0;
+    right: 0;
+    width: 100%;
+    transform: none;
+    border-radius: 0;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+    padding: 14px 12px;
+    max-width: 100vw;
+    background: var(--bg-card);
   }
 
-  .mobile-nav-backdrop {
-    display: block;
-  }
+  .mobile-nav-backdrop { display: block; }
 }
 
 @media (min-width: 768px) {
@@ -2020,4 +2047,46 @@ nav a:hover {
   nav {
     display: flex;
   }
+} 
+
+/* Extra spacing between navbar and home (hero) section */
+#hero.hero-section {
+  margin-top: 30px; /* mobile/tablet default */
+}
+
+@media (min-width: 900px) {
+  #hero.hero-section {
+    margin-top: 30px; /* larger spacing on desktop */
+  }
+} 
+
+/* Prevent horizontal scroll causing side white space */
+html, body { overflow-x: hidden; } 
+
+/* Place the hamburger button inside the navbar (top-right, centered) */
+@media (max-width: 767.98px) {
+  header { position: sticky; top: 0; }
+  .hamburger-menu {
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+    margin-left: 0;
+    z-index: 1001; /* above header content */
+  }
+  .brand { padding-right: 44px; } /* make room for the button */
+} 
+
+/* Hide/show header on scroll - robust */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 1100;
+  transform: translateY(0);
+  transition: transform 0.25s ease-in-out;
+  will-change: transform;
+}
+
+header.hide-on-scroll {
+  transform: translateY(-110%);
 } 

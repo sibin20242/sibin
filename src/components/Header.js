@@ -1,8 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import sibinImage from '../assets/sibin.jpg';
+
+const SCROLL_HIDE_THRESHOLD_PX = 6;   // smaller delta
+const MIN_SCROLL_Y_TO_HIDE_PX = 40;   // hide sooner
 
 const Header = ({ onToggleTheme, theme }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isHeaderHidden, setIsHeaderHidden] = useState(false);
+  const lastScrollYRef = useRef(0);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -26,9 +31,41 @@ const Header = ({ onToggleTheme, theme }) => {
     }
   };
 
+  useEffect(() => {
+    lastScrollYRef.current = window.pageYOffset || document.documentElement.scrollTop || 0;
+
+    const handleScroll = () => {
+      const currentY = window.pageYOffset || document.documentElement.scrollTop || 0;
+      const lastY = lastScrollYRef.current;
+      const delta = currentY - lastY;
+
+      // Always show near the top
+      if (currentY < MIN_SCROLL_Y_TO_HIDE_PX || isMobileMenuOpen) {
+        if (isHeaderHidden) setIsHeaderHidden(false);
+        lastScrollYRef.current = currentY <= 0 ? 0 : currentY;
+        return;
+      }
+
+      if (delta > SCROLL_HIDE_THRESHOLD_PX) {
+        // Scrolling down
+        if (!isHeaderHidden) setIsHeaderHidden(true);
+      } else if (delta < -SCROLL_HIDE_THRESHOLD_PX) {
+        // Scrolling up
+        if (isHeaderHidden) setIsHeaderHidden(false);
+      }
+
+      lastScrollYRef.current = currentY <= 0 ? 0 : currentY;
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isMobileMenuOpen, isHeaderHidden]);
+
+  const headerClassName = isHeaderHidden ? 'hide-on-scroll' : '';
+
   return (
     <>
-      <header>
+      <header className={headerClassName}>
         <div className="brand">
           <img src={sibinImage} alt="Profile" className="nav-photo" />
           <h1>SIBIN K S</h1>

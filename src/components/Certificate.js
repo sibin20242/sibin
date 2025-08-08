@@ -103,41 +103,41 @@ const Certificate = () => {
       }}>
         {certificates.map((cert) => (
           <div key={cert.id} style={{ position: 'relative' }}>
-            <div style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
-              <img 
+        <div style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
+          <img 
                 src={cert.img} 
                 alt={`${cert.title}`} 
-                className="certificate-pdf"
-                style={{ 
-                  width: 520, 
-                  height: 370, 
-                  borderRadius: 10, 
-                  objectFit: 'cover', 
-                  cursor: 'pointer', 
-                  boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
-                  transition: 'all 0.3s ease',
-                  border: '2px solid transparent'
-                }}
+            className="certificate-pdf"
+            style={{ 
+              width: 520, 
+              height: 370, 
+              borderRadius: 10, 
+              objectFit: 'cover', 
+              cursor: 'pointer', 
+              boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
+              transition: 'all 0.3s ease',
+              border: '2px solid transparent'
+            }}
                 onMouseEnter={(e) => handleMouseEnter(e, cert.id)}
-                onMouseLeave={handleMouseLeave}
+            onMouseLeave={handleMouseLeave}
                 onClick={() => handleClick(cert.id)}
-              />
-              <div style={{
-                position: 'absolute',
-                top: '10px',
-                right: '10px',
-                background: 'rgba(0,188,212,0.9)',
-                color: '#fff',
-                padding: '6px 12px',
-                borderRadius: '20px',
-                fontSize: '0.85rem',
-                fontWeight: '600',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
-              }}>
-                <i className="fas fa-certificate" style={{ marginRight: '6px' }}></i>
-                Certified
-              </div>
-            </div>
+          />
+          <div style={{
+            position: 'absolute',
+            top: '10px',
+            right: '10px',
+            background: 'rgba(0,188,212,0.9)',
+            color: '#fff',
+            padding: '6px 12px',
+            borderRadius: '20px',
+            fontSize: '0.85rem',
+            fontWeight: '600',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.2)'
+          }}>
+            <i className="fas fa-certificate" style={{ marginRight: '6px' }}></i>
+            Certified
+          </div>
+        </div>
 
             
           </div>
@@ -146,48 +146,48 @@ const Certificate = () => {
 
       {/* Modals */}
       {certificates.map((cert) => (
-        <div 
+      <div 
           key={`modal-${cert.id}`}
           className={`certificate-modal ${showModal[cert.id] ? 'active' : ''}`}
           onClick={() => closeModal(cert.id)}
-        >
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      >
+        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <span className="close-modal" onClick={() => closeModal(cert.id)}>&times;</span>
-            <img 
+          <img 
               src={cert.img} 
               alt={`${cert.title} Full`} 
-              className="modal-certificate-img"
-              style={{ 
-                width: 400, 
-                height: 280, 
-                borderRadius: 10, 
-                objectFit: 'cover', 
-                background: '#23272a',
-                boxShadow: '0 8px 30px rgba(0,0,0,0.3)'
-              }}
-            />
-            <div className="modal-certificate-details">
+            className="modal-certificate-img"
+            style={{ 
+              width: 400, 
+              height: 280, 
+              borderRadius: 10, 
+              objectFit: 'cover', 
+              background: '#23272a',
+              boxShadow: '0 8px 30px rgba(0,0,0,0.3)'
+            }}
+          />
+          <div className="modal-certificate-details">
               <h3 style={{ color: 'var(--primary)', marginBottom: '8px', fontSize: '1.4rem' }}>{cert.title}</h3>
-              <p style={{ color: '#b0b0b0', fontSize: '1.08rem', marginBottom: '12px' }}>
+            <p style={{ color: '#b0b0b0', fontSize: '1.08rem', marginBottom: '12px' }}>
                 <strong>{cert.fullTitle}</strong><br />
                 <span style={{ color: 'var(--accent)' }}>Issued by: {cert.issuer}</span><br />
                 <span style={{ color: 'var(--accent)' }}>Date: {cert.date}</span>
-              </p>
-              <p style={{ 
-                marginTop: '10px', 
-                color: '#eee', 
-                lineHeight: '1.6', 
-                fontSize: '1.1rem',
-                fontStyle: 'italic',
-                background: 'rgba(0,188,212,0.05)',
-                padding: '12px',
-                borderRadius: '8px',
-                border: '1px solid rgba(0,188,212,0.2)',
-                marginBottom: '15px'
-              }}>
+            </p>
+            <p style={{ 
+              marginTop: '10px', 
+              color: '#eee', 
+              lineHeight: '1.6', 
+              fontSize: '1.1rem',
+              fontStyle: 'italic',
+              background: 'rgba(0,188,212,0.05)',
+              padding: '12px',
+              borderRadius: '8px',
+              border: '1px solid rgba(0,188,212,0.2)',
+              marginBottom: '15px'
+            }}>
                 {cert.description}
-              </p>
-              <p style={{ marginTop: '10px', color: '#eee', lineHeight: '1.6', fontSize: '1.1rem' }}>
+            </p>
+            <p style={{ marginTop: '10px', color: '#eee', lineHeight: '1.6', fontSize: '1.1rem' }}>
                 {cert.longDescription}
               </p>
                              {cert.additionalInfo && (
@@ -236,15 +236,15 @@ const Certificate = () => {
                    )}
                  </div>
                )}
-              <div style={{ 
-                marginTop: '15px', 
-                padding: '12px 16px', 
-                background: 'rgba(0,188,212,0.1)', 
-                borderRadius: '8px',
-                border: '1px solid rgba(0,188,212,0.3)'
-              }}>
-                <span style={{ color: 'var(--primary)', fontWeight: '600', fontSize: '1.1rem' }}>Skills Validated:</span>
-                <div style={{ color: '#b0b0b0', marginTop: '8px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+            <div style={{ 
+              marginTop: '15px', 
+              padding: '12px 16px', 
+              background: 'rgba(0,188,212,0.1)', 
+              borderRadius: '8px',
+              border: '1px solid rgba(0,188,212,0.3)'
+            }}>
+              <span style={{ color: 'var(--primary)', fontWeight: '600', fontSize: '1.1rem' }}>Skills Validated:</span>
+              <div style={{ color: '#b0b0b0', marginTop: '8px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
                   {cert.skills.map((skill, index) => (
                     <span key={index}>• {skill}</span>
                   ))}

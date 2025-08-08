@@ -39,13 +39,6 @@ const Hero = () => {
 
   return (
     <section id="hero" className="hero-section" style={{ position: 'relative', overflow: 'hidden' }}>
-      {/* Animated background shapes */}
-      <div className="hero-bg-animated">
-        <div className="circle circle1"></div>
-        <div className="circle circle2"></div>
-        <div className="circle circle3"></div>
-        <div className="circle circle4"></div>
-      </div>
       <div className="hero-left" style={{
         opacity: isVisible ? 1 : 0,
         transform: isVisible ? 'translateX(0)' : 'translateX(-50px)',
@@ -77,30 +70,6 @@ const Hero = () => {
           gap: '20px',
           flexWrap: 'wrap'
         }}>
-          {/* <div style={{ textAlign: 'center' }}>
-            <div style={{ 
-              fontSize: '2rem', 
-              fontWeight: 'bold', 
-              color: 'var(--primary)' 
-            }}>2+</div>
-            <div style={{ color: 'var(--text-muted)' }}>Years Experience</div>
-          </div>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ 
-              fontSize: '2rem', 
-              fontWeight: 'bold', 
-              color: 'var(--primary)' 
-            }}>10+</div>
-            <div style={{ color: 'var(--text-muted)' }}>Projects Completed</div>
-          </div>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ 
-              fontSize: '2rem', 
-              fontWeight: 'bold', 
-              color: 'var(--primary)' 
-            }}>5+</div>
-            <div style={{ color: 'var(--text-muted)' }}>Technologies</div>
-          </div> */}
         </div>
       </div>
       <img 
